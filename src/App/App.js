@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {Route, Link} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import AddNote from '../AddNote/AddNote';
+import AddFolder from '../AddFolder/AddFolder';
 import NoteListNav from '../NoteListNav/NoteListNav';
 import NotePageNav from '../NotePageNav/NotePageNav';
 import NoteListMain from '../NoteListMain/NoteListMain';
@@ -42,6 +44,12 @@ class App extends Component {
         });
     };
 
+    handleAddNote = (noteId) => {
+        this.setState({
+            notes: this.state.notes.map(note => note.id === noteId)
+        });
+    };
+
     renderNavRoutes() {
         return (
             <>
@@ -72,6 +80,8 @@ class App extends Component {
                     />
                 ))}
                 <Route path="/note/:noteId" component={NotePageMain} />
+                <Route path="/add-note" component={AddNote} />
+                {/* <Route path="/add-folder" component={AddFolder} /> */}
             </>
         );
     }
