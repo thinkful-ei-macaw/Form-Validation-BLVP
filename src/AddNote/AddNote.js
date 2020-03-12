@@ -1,12 +1,16 @@
-import React from 'react'
+import React from 'react';
+import ApiContext from '../ApiContext';
 import config from '../config'; 
 
 class AddNote extends React.Component {
+
+    static contextType = ApiContext;
+
     state = {
         nameNote: {value:''},
         folderId: {value: ''},
         content: {value: ''}
-}
+    }
 
     handleAddNote(nameNote, dateCreated, folderId, content) {
         fetch(`${config.API_ENDPOINT}/notes`, {
@@ -17,7 +21,7 @@ class AddNote extends React.Component {
             body: JSON.stringify({
                 "name": nameNote,
                 "modified": dateCreated,
-                "folderId": folder.id,
+                "folderId": folderId,
                 "content": content
             })
         })
@@ -33,11 +37,11 @@ class AddNote extends React.Component {
         .catch(err => err.message)
     }
 
-    validateNoteName(event) {
+    validateNoteName = (event) => {
         event.preventDefault();
         const validNote = this.state.nameNote.value;
         if(validNote === '') {
-            return this.handleAddNote()
+            return this.handleAddNote(this.state.nameNote, this.state.folderId, this.state.content)
         } else {
             alert('Note must have a title!')
         }
@@ -47,7 +51,7 @@ class AddNote extends React.Component {
         this.setState({nameNote: {value:nameNote}})   
     }
     updateFolderId(folderId){
-        this.setState({folderId: {value: folder.id}})
+        this.setState({folderId: {value: folderId}})
     }
     updateContent(content){
         this.setState({content: {value:content}})
@@ -58,24 +62,23 @@ class AddNote extends React.Component {
     render() {
         return (
             <div>
-                <form>
+                <form onSubmit={this.validateNoteName}>
                     <label htmlFor="nameNote">Note Name Here</label>
                     <input id="nameNote" type="text" 
                      value={this.state.nameNote.value} onChange={e => this.updateName(e.target.value)}/>
                     <label htmlFor="folderName">Select Here</label>
-                        <select id='folderChange' 
+                        <select id='folderName' 
                         onChange={event => this.updateFolderId(event.target.value)}>
                             {this.context.folders.map(folder => {
-                            return <option value={folder.id}> {folder.name} </option>}
+                                return <option value={folder.id}> {folder.name} </option>})}
                         </select>
                     <label htmlFor="content">Content Here</label>
                     <input id="content" type="text" 
                     value={this.state.content.value}
                     onChange={e => this.updateContent(e.target.value)}
                     />
-                    <button type="submit" 
-                    disabled ={this.validateNoteName()} 
-                    onClick={this.handleAddNote()}>Add Note</button>
+                    <button type="submit"  
+                    >Add Note</button>
                 </form>
             </div>
         )
