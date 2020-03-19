@@ -8,21 +8,21 @@ class AddNote extends React.Component {
 
     state = {
         nameNote: {value:''},
-        folderId: {value: ''},
+        folderId: {value: 'b0715efe-ffaf-11e8-8eb2-f2801f1b9fd1'},
         content: {value: ''}
     }
 
-    handleAddNote(nameNote, dateCreated, folderId, content) {
+    handleAddNote(nameNote, folderId, content) {
         fetch(`${config.API_ENDPOINT}/notes`, {
             method: 'POST',
-            header: {
+            headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                "name": nameNote,
-                "modified": dateCreated,
-                "folderId": folderId,
-                "content": content
+                "name": nameNote.value,
+                "modified": new Date(),
+                "folderId": folderId.value,
+                "content": content.value
             })
         })
         .then(res => {
@@ -33,6 +33,7 @@ class AddNote extends React.Component {
         })
         .then(data=>{
             console.log(data)
+            this.context.getNotes();
         })
         .catch(err => err.message)
     }
@@ -40,7 +41,7 @@ class AddNote extends React.Component {
     validateNoteName = (event) => {
         event.preventDefault();
         const validNote = this.state.nameNote.value;
-        if(validNote === '') {
+        if(validNote) {
             return this.handleAddNote(this.state.nameNote, this.state.folderId, this.state.content)
         } else {
             alert('Note must have a title!')
@@ -70,7 +71,7 @@ class AddNote extends React.Component {
                         <select id='folderName' 
                         onChange={event => this.updateFolderId(event.target.value)}>
                             {this.context.folders.map(folder => {
-                                return <option value={folder.id}> {folder.name} </option>})}
+                                return <option key={folder.id} value={folder.id}> {folder.name} </option>})}
                         </select>
                     <label htmlFor="content">Content Here</label>
                     <input id="content" type="text" 

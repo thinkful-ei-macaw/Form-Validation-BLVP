@@ -14,10 +14,13 @@ import './App.css';
 class App extends Component {
     state = {
         notes: [],
-        folders: []
+        folders: [],
     };
-
-    componentDidMount() {
+componentDidMount(){
+    this.handleGetNotes()
+}
+    handleGetNotes = ()=>{
+        console.log('Fetching new info!')
         Promise.all([
             fetch(`${config.API_ENDPOINT}/notes`),
             fetch(`${config.API_ENDPOINT}/folders`)
@@ -31,13 +34,15 @@ class App extends Component {
                 return Promise.all([notesRes.json(), foldersRes.json()]);
             })
             .then(([notes, folders]) => {
+                console.log('notes', notes)
+                console.log('folders', folders)
                 this.setState({notes, folders});
             })
             .catch(error => {
                 console.error({error});
             });
     }
-
+    
     handleDeleteNote = noteId => {
         this.setState({
             notes: this.state.notes.filter(note => note.id !== noteId)
@@ -51,6 +56,7 @@ class App extends Component {
     };
 
     renderNavRoutes() {
+
         return (
             <>
                 {['/', '/folder/:folderId'].map(path => (
@@ -81,16 +87,22 @@ class App extends Component {
                 ))}
                 <Route path="/note/:noteId" component={NotePageMain} />
                 <Route path="/add-note" component={AddNote} />
-                {/* <Route path="/add-folder" component={AddFolder} /> */}
+                <Route path="/add-folder" component={AddFolder} />
             </>
         );
     }
 
     render() {
+        console.log('has error', this.state.hasError)
+        if(this.state.hasError){
+            return <h1>Error!</h1>
+        }
+        
         const value = {
             notes: this.state.notes,
             folders: this.state.folders,
-            deleteNote: this.handleDeleteNote
+            deleteNote: this.handleDeleteNote,
+            getNotes: this.handleGetNotes
         };
         return (
             <ApiContext.Provider value={value}>

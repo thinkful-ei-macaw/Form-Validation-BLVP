@@ -1,25 +1,26 @@
 import React, { Component } from 'react'
+import ApiContext from '../ApiContext';
 import config from '../config';
 
 class AddFolder extends Component {
-    state = {folderName: {value:''}}
-    setNameNote = folderName =>{
-        this.setState({folder: {value:folderName}})
+    static contextType = ApiContext
+
+    state = {
+        folderName: {value:''}
     }
 
-    handleNoteChange(event){
-        this.setState({folderName: event.target.value});
+    handleNoteChange = (event)=>{
+        this.setState({folderName: {value:event.target.value}});
     }
 
 
-    handleAddFolder(folderId, folderName) {
-        fetch(`${config.API_ENDPOINT}/notes`, {
+    handleAddFolder= (folderName) => {
+        fetch(`${config.API_ENDPOINT}/folders`, {
             method: 'POST',
-            header: {
+            headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                "id": folderId,
                 "name": folderName
             })
         })
@@ -31,37 +32,34 @@ class AddFolder extends Component {
         })
         .then(data=>{
             console.log(data)
+            console.log('note added!')
+            console.log(this.context)
+            this.context.getNotes();
+            console.log(this.context.getNotes)
         })
         .catch(err => err.message)
     }
 
-    validateFolderName(event) {
+    validateFolderName = (event) => {
         event.preventDefault();
         const validFolder = this.state.folderName.value;
-        if(validFolder === '') {
-            return this.handleAddFolder();
+        if(validFolder) {
+            return this.handleAddFolder(validFolder);
         } else {
             return alert('Folder name is required');
         }
     }
 
+    
+
     render() {
+        console.log('this.context = ', this.context)
         return (
             <div>
-                <form>
-                    {/* </form>/* <label htmlFor="nameNote">Note Name Here</label>
-                    <input id="nameNote" type="text" 
-                     value={this.state.nameNote.value}/>
-                    <label htmlFor="folderName">Folder Here</label>
-                    <input id="folderName" type="text" 
-                    value={this.state.folderName.value}/>
-                    <label htmlFor="content">Content Here</label>
-                    <input id="content" type="text" 
-                    value={this.state.content.value}/> */ }
+                <form onSubmit={this.validateFolderName}>
                     <label htmlFor="folderName"></label>
-                    <button type="submit" 
-                    disabled ={this.validateFolderName()} 
-                    onClick={this.handleAddFolder()}>Add Folder</button>
+                    <input type="text" id="folderName" value={this.state.folderName.value} onChange={this.handleNoteChange}/>
+                    <button type="submit" >Add Folder</button>
                 </form>
             </div>
         )
