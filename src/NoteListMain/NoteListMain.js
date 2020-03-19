@@ -6,6 +6,8 @@ import CircleButton from '../CircleButton/CircleButton'
 import ApiContext from '../ApiContext'
 import { getNotesForFolder } from '../notes-helpers'
 import './NoteListMain.css'
+import ErrorBoundary from '../ErrorBoundary'
+import PropTypes from 'prop-types';
 
 export default class NoteListMain extends React.Component {
   static defaultProps = {
@@ -15,11 +17,20 @@ export default class NoteListMain extends React.Component {
   }
   static contextType = ApiContext
 
+  static propTypes = {
+    match: PropTypes.shape({
+      params:PropTypes.shape({
+        folderId: PropTypes.string,
+      })
+    })
+  }
+
   render() {
     const { folderId } = this.props.match.params
     const { notes=[] } = this.context
     const notesForFolder = getNotesForFolder(notes, folderId)
     return (
+      <ErrorBoundary>
       <section className='NoteListMain'>
         <ul>
           {notesForFolder.map(note =>
@@ -45,6 +56,7 @@ export default class NoteListMain extends React.Component {
           </CircleButton>
         </div>
       </section>
+      </ErrorBoundary>
     )
   }
 }

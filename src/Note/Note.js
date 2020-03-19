@@ -5,10 +5,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ApiContext from '../ApiContext'
 import config from '../config'
 import './Note.css'
+import PropTypes from 'prop-types';
 
 export default class Note extends React.Component {
   static defaultProps ={
     onDeleteNote: () => {},
+  }
+  static propTypes ={
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    modified: PropTypes.string.isRequired,
+    onDeleteNote: PropTypes.func.isRequired
   }
   static contextType = ApiContext;
 
@@ -43,6 +50,7 @@ export default class Note extends React.Component {
     
 
     return (
+     
       <div className='Note'>
         <h2 className='Note__title'>
           <Link to={`/note/${id}`}>
@@ -68,6 +76,7 @@ export default class Note extends React.Component {
           </div>
         </div>
       </div>
+
     )
   }
 }

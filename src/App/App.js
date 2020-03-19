@@ -14,8 +14,9 @@ import './App.css';
 class App extends Component {
     state = {
         notes: [],
-        folders: [],
+        folders: []
     };
+
 componentDidMount(){
     this.handleGetNotes()
 }
