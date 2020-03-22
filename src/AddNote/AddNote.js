@@ -61,20 +61,29 @@ class AddNote extends React.Component {
 
 
     render() {
+        const styleText= {color: '#A9A9A9'}
         return (
             <div>
                 <form onSubmit={this.validateNoteName}>
-                    <label htmlFor="nameNote">Note Name Here</label>
-                    <input id="nameNote" type="text" 
-                     value={this.state.nameNote.value} onChange={e => this.updateName(e.target.value)}/>
-                    <label htmlFor="folderName">Select Here</label>
+                    <label htmlFor="nameNote"><span style={styleText}> Note Name Here</span></label>
+                    <input 
+                    id="nameNote" 
+                    type="text" 
+                    aria-label="Due date for book return" 
+                    aria-required="true" 
+                    value={this.state.nameNote.value} 
+                    onChange={e => this.updateName(e.target.value)}/>
+                    <label htmlFor="folderName"><span style={styleText}>Select Here</span></label>
                         <select id='folderName' 
                         onChange={event => this.updateFolderId(event.target.value)}>
                             {this.context.folders.map(folder => {
                                 return <option key={folder.id} value={folder.id}> {folder.name} </option>})}
                         </select>
-                    <label htmlFor="content">Content Here</label>
-                    <input id="content" type="text" 
+                    <label htmlFor="content"><span style={styleText}>Content Here</span></label>
+                    <input 
+                    id="content" type="text"
+                    aria-label="Add the contents of your new note." 
+                    aria-required="true" 
                     value={this.state.content.value}
                     onChange={e => this.updateContent(e.target.value)}
                     />

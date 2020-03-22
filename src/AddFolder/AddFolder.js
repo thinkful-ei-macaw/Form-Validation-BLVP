@@ -53,11 +53,11 @@ class AddFolder extends Component {
     
 
     render() {
-        console.log('this.context = ', this.context)
+        const styleText={color:"#A9A9A9"}
         return (
             <div>
                 <form onSubmit={this.validateFolderName}>
-                    <label htmlFor="folderName"></label>
+                    <label htmlFor="folderName"><span style={styleText}>Folder Name:</span></label>
                     <input type="text" id="folderName" value={this.state.folderName.value} onChange={this.handleNoteChange}/>
                     <button type="submit" >Add Folder</button>
                 </form>
